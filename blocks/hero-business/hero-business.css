@@ -10,10 +10,12 @@
   margin-bottom: 32px;
   border-radius: 16px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
 .hero-business-text {
-  max-width: 616px;
+  width: 40%;
 }
 
 .hero-business h1 {
@@ -21,6 +23,23 @@
   margin-left: auto;
   margin-right: auto;
   color: var(--background-color);
+}
+
+.hero-business h2 {
+  text-align: left;
+}
+
+.hero-business p {
+  text-align: left;
+}
+
+.hero-business p:first-of-type {
+  font-size: 28px;
+}
+
+.hero-business p:nth-of-type(3) {
+  font: 400 18px / 25.2px attAleckSans, "Helvetica Neue", helvetica, arial, sans-serif !important;
+  color: var(--baem-text-body, #454b52);
 }
 
 .hero-business picture {
