@@ -38,12 +38,6 @@
   height: 100%;
 }
 
-.storystack .storystack-image-wrapper picture img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .storystack .storystack-icon {
   position: absolute;
   top: 20px;
@@ -69,6 +63,12 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.storystack .storystack-image-wrapper picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .storystack .storystack-content {
