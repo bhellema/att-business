@@ -16,15 +16,41 @@
  */
 
 export default function parse(element, { document }) {
-  // Extract background image (desktop)
-  const bgImage = element.querySelector('.bg-hero-panel img, .bg-art img');
+  let heroImage = null;
+  let imageAlt = '';
 
-  // Extract mobile image as fallback
-  const mobileImage = element.querySelector('.hero-panel-image img, .visible-mobile');
+  // First priority: Check for data-desktop attribute on custom-hero-absolute-fill
+  const heroAbsoluteFill = element.querySelector('.custom-hero-absolute-fill[data-desktop]');
+  if (heroAbsoluteFill) {
+    const desktopImageUrl = heroAbsoluteFill.getAttribute('data-desktop');
+    if (desktopImageUrl) {
+      heroImage = { src: desktopImageUrl, alt: '' };
+    }
+  }
 
-  // Use desktop background image if available, otherwise mobile image
-  const heroImage = bgImage || mobileImage;
-  const imageAlt = (heroImage && heroImage.alt) || '';
+  // Second priority: Extract all images and look for desktop version (hp-dsk)
+  if (!heroImage) {
+    const allImages = Array.from(element.querySelectorAll('img'));
+    heroImage = allImages.find(img => img.src && img.src.includes('hp-dsk'));
+  }
+
+  // Third priority: desktop background image selectors
+  if (!heroImage) {
+    heroImage = element.querySelector('.bg-hero-panel img, .bg-art img');
+  }
+
+  // Last resort: mobile image
+  if (!heroImage) {
+    heroImage = element.querySelector('.hero-panel-image img, .visible-mobile');
+  }
+
+  // If we got a mobile image, transform URL to desktop version
+  if (heroImage && heroImage.src && heroImage.src.includes('hp-mbl')) {
+    const desktopSrc = heroImage.src.replace('hp-mbl', 'hp-dsk');
+    heroImage = { src: desktopSrc, alt: heroImage.alt };
+  }
+
+  imageAlt = (heroImage && heroImage.alt) || '';
 
   // Extract text content elements
   const eyebrow = element.querySelector('.eyebrow-xxxl-desktop, .eyebrow-heading');

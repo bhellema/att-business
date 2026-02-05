@@ -1,4 +1,4 @@
-.hero-business-container .hero-business-wrapper {
+.hero-business-container .hero-wrapper {
   max-width: unset;
   padding: 0;
 }
@@ -7,6 +7,10 @@
   position: relative;
   padding: 40px 24px;
   min-height: 300px;
+}
+
+.hero-business-text {
+  max-width: 616px;
 }
 
 .hero-business h1 {

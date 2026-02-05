@@ -25,10 +25,30 @@ var CustomImportScript = (() => {
 
   // tools/importer/parsers/hero-business.js
   function parse(element, { document }) {
-    const bgImage = element.querySelector(".bg-hero-panel img, .bg-art img");
-    const mobileImage = element.querySelector(".hero-panel-image img, .visible-mobile");
-    const heroImage = bgImage || mobileImage;
-    const imageAlt = heroImage && heroImage.alt || "";
+    let heroImage = null;
+    let imageAlt = "";
+    const heroAbsoluteFill = element.querySelector(".custom-hero-absolute-fill[data-desktop]");
+    if (heroAbsoluteFill) {
+      const desktopImageUrl = heroAbsoluteFill.getAttribute("data-desktop");
+      if (desktopImageUrl) {
+        heroImage = { src: desktopImageUrl, alt: "" };
+      }
+    }
+    if (!heroImage) {
+      const allImages = Array.from(element.querySelectorAll("img"));
+      heroImage = allImages.find((img) => img.src && img.src.includes("hp-dsk"));
+    }
+    if (!heroImage) {
+      heroImage = element.querySelector(".bg-hero-panel img, .bg-art img");
+    }
+    if (!heroImage) {
+      heroImage = element.querySelector(".hero-panel-image img, .visible-mobile");
+    }
+    if (heroImage && heroImage.src && heroImage.src.includes("hp-mbl")) {
+      const desktopSrc = heroImage.src.replace("hp-mbl", "hp-dsk");
+      heroImage = { src: desktopSrc, alt: heroImage.alt };
+    }
+    imageAlt = heroImage && heroImage.alt || "";
     const eyebrow = element.querySelector(".eyebrow-xxxl-desktop, .eyebrow-heading");
     let heading = element.querySelector(".heading-seo");
     if (!heading || !heading.textContent.trim()) {
