@@ -153,7 +153,9 @@ h1 {
 
 h2 {
   font-size: var(--heading-font-size-xl);
+  font-weight: 700 !important;
   letter-spacing: var(--heading-letter-spacing-xl);
+  text-align: center;
 }
 
 h3 {
@@ -183,6 +185,11 @@ pre,
 blockquote {
   margin-top: 0.8em;
   margin-bottom: 0.25em;
+}
+
+/* Center align paragraph immediately following h2 */
+h2 + p {
+  text-align: center;
 }
 
 code,

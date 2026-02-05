@@ -1,27 +1,130 @@
+/* AT&T Business Cards */
+.cards {
+  padding-top: 40px;
+}
+
 .cards > ul {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(334px, 1fr));
+  gap: 32px;
 }
 
 .cards > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
-}
-
-.cards .cards-card-body {
-  margin: 16px;
+  display: flex;
+  flex-direction: column;
+  width: 334px;
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: rgb(242 250 253);
 }
 
 .cards .cards-card-image {
   line-height: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .cards > ul > li img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  height: 209px;
   object-fit: cover;
+  display: block;
+  border-radius: 0;
+}
+
+.cards .cards-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 16px;
+  background-color: rgb(242 250 253);
+  font-family: attAleckSans, "Helvetica Neue", helvetica, arial, sans-serif;
+  font-weight: 400;
+}
+
+@media (width >= 900px) {
+  .cards > ul {
+    grid-template-columns: repeat(auto-fill, minmax(378px, 1fr));
+  }
+
+  .cards > ul > li {
+    width: 378px;
+  }
+
+  .cards .cards-card-body {
+    padding: 24px;
+  }
+}
+
+/* Card heading */
+.cards .cards-card-body h3 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--att-text-primary);
+  margin-top: 0;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+/* First paragraph - description text */
+.cards .cards-card-body > p:nth-of-type(1) {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--att-text-secondary);
+  margin-top: 0;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+/* Third paragraph - fine print */
+.cards .cards-card-body > p:nth-of-type(3) {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--att-text-secondary);
+  margin-top: 0;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+/* Pricing section */
+.cards .cards-card-body .price-label {
+  font-size: 13px;
+  color: var(--att-text-secondary);
+  margin-bottom: 4px;
+}
+
+.cards .cards-card-body .price {
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--att-text-primary);
+  line-height: 1;
+}
+
+.cards .cards-card-body .price-term {
+  font-size: 12px;
+  color: var(--att-text-secondary);
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+/* Fine print */
+.cards .cards-card-body .fine-print {
+  font-size: 12px;
+  color: var(--att-text-secondary);
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+/* Button spacing */
+.cards .cards-card-body .button-container {
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.cards .cards-card-body a.button {
+  margin-top: 0;
 }
