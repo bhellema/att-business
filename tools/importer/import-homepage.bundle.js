@@ -464,6 +464,23 @@ var CustomImportScript = (() => {
         "script",
         "style"
       ]);
+      let changed = true;
+      while (changed) {
+        changed = false;
+        const uls = Array.from(element.querySelectorAll("ul:not([class])"));
+        for (let i = 0; i < uls.length - 1; i++) {
+          const currentUl = uls[i];
+          const nextUl = uls[i + 1];
+          if (nextUl && currentUl.nextElementSibling === nextUl) {
+            Array.from(nextUl.children).forEach((child) => {
+              currentUl.appendChild(child);
+            });
+            nextUl.remove();
+            changed = true;
+            break;
+          }
+        }
+      }
     }
   }
 

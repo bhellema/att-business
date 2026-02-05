@@ -50,6 +50,27 @@ export default function transform(hookName, element, payload) {
       'style'
     ]);
 
+    // Combine consecutive ul elements into a single list (only unclassed ones)
+    let changed = true;
+    while (changed) {
+      changed = false;
+      const uls = Array.from(element.querySelectorAll('ul:not([class])'));
+      for (let i = 0; i < uls.length - 1; i++) {
+        const currentUl = uls[i];
+        const nextUl = uls[i + 1];
+        // Check if they are actually siblings
+        if (nextUl && currentUl.nextElementSibling === nextUl) {
+          // Move all children from next ul to current ul
+          Array.from(nextUl.children).forEach((child) => {
+            currentUl.appendChild(child);
+          });
+          nextUl.remove();
+          changed = true;
+          break; // Restart the loop since DOM has changed
+        }
+      }
+    }
+
     // Note: Previously removed content after hero for hero-only migration
     // Now preserving all blocks (hero, cards, banner) for full page migration
   }
