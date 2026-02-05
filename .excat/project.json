@@ -1,5 +1,6 @@
 {
   "type": "xwalk",
+  "libraryUrl": "https://main--sta-xwalk-boilerplate--aemysites.aem.page/tools/sidekick/library.json",
   "contentHostUrl": "author-p141866-e1619657.adobeaemcloud.com",
   "aemSitePath": "/content/att",
   "aemAssetsFolderPath": "/content/dam/att",
