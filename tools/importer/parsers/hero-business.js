@@ -1,0 +1,103 @@
+/* eslint-disable */
+/* global WebImporter */
+
+/**
+ * Parser for hero-business block
+ *
+ * Source: https://www.business.att.com/
+ * Base Block: hero
+ *
+ * Block Structure (Universal Editor xwalk format):
+ * - Field 1: image (reference) - Background/hero image
+ * - Field 2: imageAlt (text) - Image alt text
+ * - Field 3: text (richtext) - Eyebrow, heading, and paragraph content
+ *
+ * Generated: 2026-02-05
+ */
+
+export default function parse(element, { document }) {
+  // Extract background image (desktop)
+  const bgImage = element.querySelector('.bg-hero-panel img, .bg-art img');
+
+  // Extract mobile image as fallback
+  const mobileImage = element.querySelector('.hero-panel-image img, .visible-mobile');
+
+  // Use desktop background image if available, otherwise mobile image
+  const heroImage = bgImage || mobileImage;
+  const imageAlt = (heroImage && heroImage.alt) || '';
+
+  // Extract text content elements
+  const eyebrow = element.querySelector('.eyebrow-xxxl-desktop, .eyebrow-heading');
+
+  // Get heading - try multiple strategies
+  // Strategy 1: heading-seo class
+  let heading = element.querySelector('.heading-seo');
+  // Strategy 2: if not found or empty, try all h2s and find first non-empty one
+  if (!heading || !heading.textContent.trim()) {
+    const allH2s = element.querySelectorAll('h2');
+    for (const h2 of allH2s) {
+      if (h2.textContent.trim()) {
+        heading = h2;
+        break;
+      }
+    }
+  }
+
+  const description = element.querySelector('.wysiwyg-editor p, .type-base p');
+
+  // Build richtext content (eyebrow + heading + paragraph)
+  const textContent = document.createElement('div');
+
+  if (eyebrow) {
+    const eyebrowEl = document.createElement('p');
+    eyebrowEl.className = 'eyebrow';
+    eyebrowEl.textContent = eyebrow.textContent.trim();
+    textContent.appendChild(eyebrowEl);
+  }
+
+  if (heading) {
+    const headingEl = document.createElement('h2');
+    headingEl.textContent = heading.textContent.trim();
+    textContent.appendChild(headingEl);
+  }
+
+  if (description) {
+    const descEl = document.createElement('p');
+    descEl.textContent = description.textContent.trim();
+    textContent.appendChild(descEl);
+  }
+
+  // Create picture element with collapsed imageAlt field
+  // xwalk uses <picture><img> for image references
+  const pictureEl = document.createElement('picture');
+  if (heroImage) {
+    const imgEl = document.createElement('img');
+    imgEl.src = heroImage.src;
+    imgEl.alt = imageAlt;
+    pictureEl.appendChild(imgEl);
+  }
+
+  // Add field hints using DocumentFragment (MANDATORY for xwalk)
+  const imageFrag = document.createDocumentFragment();
+  imageFrag.appendChild(document.createComment(' field:image '));
+  imageFrag.appendChild(pictureEl);
+
+  const textFrag = document.createDocumentFragment();
+  textFrag.appendChild(document.createComment(' field:text '));
+  textFrag.appendChild(textContent);
+
+  // Create cells array for xwalk block
+  // For xwalk: All rows/columns must exist (even if empty)
+  // Row 1: image (reference field with collapsed imageAlt)
+  // Row 2: text (richtext field)
+  const cells = [
+    [imageFrag],  // Row 1, column 1
+    [textFrag]    // Row 2, column 1
+  ];
+
+  // Use exact variant name from block variant management
+  const block = WebImporter.Blocks.createBlock(document, { name: 'hero-business', cells });
+
+  // Replace element with block
+  element.replaceWith(block);
+}

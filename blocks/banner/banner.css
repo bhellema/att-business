@@ -1,0 +1,33 @@
+.banner > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.banner img {
+  width: 100%;
+}
+
+.banner > div > div {
+  order: 1;
+}
+
+.banner > div > .banner-img-col {
+  order: 0;
+}
+
+.banner > div > .banner-img-col img {
+  display: block;
+}
+
+@media (width >= 900px) {
+  .banner > div {
+    align-items: center;
+    flex-direction: unset;
+    gap: 24px;
+  }
+
+  .banner > div > div {
+    flex: 1;
+    order: unset;
+  }
+}

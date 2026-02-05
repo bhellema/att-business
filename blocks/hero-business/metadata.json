@@ -1,0 +1,38 @@
+{
+  "variantName": "hero-business",
+  "baseBlock": "hero",
+  "version": "1.0.0",
+  "created": "2026-02-05T01:00:00.000Z",
+  "sourceContext": {
+    "originUrl": "https://www.business.att.com/",
+    "originPage": "AT&T Business homepage",
+    "blockPosition": "top"
+  },
+  "visualCharacteristics": {
+    "colorScheme": "light",
+    "density": "spacious",
+    "purpose": "business-hero",
+    "imagePattern": "dual-image"
+  },
+  "contentPattern": {
+    "structure": "eyebrow + heading + paragraph + images",
+    "buttonCount": 0,
+    "imageCount": 2
+  },
+  "reuseGuidance": {
+    "suitableFor": [
+      "business homepages",
+      "corporate landing pages",
+      "brand messaging pages with dual images"
+    ],
+    "notSuitableFor": [
+      "minimal text-only heroes",
+      "product pages with single image focus"
+    ]
+  },
+  "usage": {
+    "pagesUsing": ["/index"],
+    "reuseCount": 2,
+    "lastUsed": "2026-02-05T15:17:00.000Z"
+  }
+}

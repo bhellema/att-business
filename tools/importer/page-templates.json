@@ -1,0 +1,50 @@
+{
+  "templates": [
+    {
+      "name": "homepage",
+      "urls": [
+        "https://www.business.att.com/"
+      ],
+      "description": "AT&T Business homepage with hero section",
+      "blocks": [
+        {
+          "name": "hero-business",
+          "instances": [
+            ".custom-target > .hero"
+          ]
+        },
+        {
+          "name": "cards",
+          "instances": [
+            ".multi-tile-row"
+          ]
+        },
+        {
+          "name": "banner",
+          "instances": [
+            ".flex-cards",
+            ".aem-Grid > .hero"
+          ]
+        },
+        {
+          "name": "cards-quiet",
+          "instances": [
+            ".generic-list-icon-vp-row"
+          ]
+        },
+        {
+          "name": "carousel",
+          "instances": [
+            ".banner-section.swiper"
+          ]
+        },
+        {
+          "name": "storystack",
+          "instances": [
+            ".story-stack"
+          ]
+        }
+      ]
+    }
+  ]
+}
