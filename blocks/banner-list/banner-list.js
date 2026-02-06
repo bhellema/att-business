@@ -8,23 +8,14 @@ export default function decorate(block) {
   banners.forEach((banner) => {
     banner.classList.add('banner-list-item');
 
-    // Get all child divs
     const children = [...banner.children];
 
-    // First child is classes field - remove it
-    if (children[0]) {
-      children[0].remove();
-    }
-
-    // After removing classes, get updated children
-    const updatedChildren = [...banner.children];
-
     // First remaining div contains the image
-    if (updatedChildren[0]) {
-      updatedChildren[0].classList.add('banner-list-item-image');
+    if (children[0]) {
+      children[0].classList.add('banner-list-item-image');
 
       // Find image and create optimized picture element
-      const img = updatedChildren[0].querySelector('img');
+      const img = children[0].querySelector('img');
       if (img) {
         const { src, alt } = img;
 
@@ -55,8 +46,8 @@ export default function decorate(block) {
       }
     }
     // Second remaining div contains the text content
-    if (updatedChildren[1]) {
-      updatedChildren[1].classList.add('banner-list-item-text');
+    if (children[1]) {
+      children[1].classList.add('banner-list-item-text');
     }
   });
 }
