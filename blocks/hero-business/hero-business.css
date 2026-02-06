@@ -68,7 +68,7 @@
 }
 
 /* Button container - display buttons in a row */
-.hero-business-text > p:has(a.button) {
+.hero-business-text p:has(a.button) {
   display: inline-block;
   margin: 0 16px 0 0;
 }
