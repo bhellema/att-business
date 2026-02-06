@@ -31,7 +31,7 @@ export default function decorate(block) {
         src,
         alt,
         false,
-        [{ width: '750' }, { width: '1200' }],
+        [{ width: '1600' }, { width: '1200' }, { width: '750' }],
       );
       // Update picture reference to the optimized version
       picture = optimizedPicture;
