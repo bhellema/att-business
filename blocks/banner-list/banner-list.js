@@ -1,4 +1,4 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
+import { createOptimizedPicture, moveInstrumentation } from '../../scripts/aem.js';
 
 export default function decorate(block) {
   // Each row in the block becomes a banner item
@@ -23,41 +23,35 @@ export default function decorate(block) {
       classesCell.remove();
     }
 
-    // Find image and create optimized picture element
+
     const img = banner.querySelector('img');
-    if (img) {
-      const { src, alt } = img;
+    const { src, alt } = img;
 
-      // Check if image is external (not from same origin)
-      const isExternal = src.startsWith('http') && !src.startsWith(window.location.origin);
+    // Check if image is external (not from same origin)
+    const isExternal = src.startsWith('http') && !src.startsWith(window.location.origin);
 
-      let picture;
-      if (isExternal) {
-        // For external images, create picture without optimization
-        picture = document.createElement('picture');
-        const newImg = document.createElement('img');
-        newImg.src = src;
-        newImg.alt = alt;
-        newImg.loading = 'lazy';
-        picture.appendChild(newImg);
-      } else {
-        // For local images, use createOptimizedPicture
-        picture = createOptimizedPicture(
-          src,
-          alt,
-          false,
-          [{ width: '1600' }, { width: '1200' }, { width: '750' }],
-        );
-      }
+    let picture;
+    if (isExternal) {
+      // For external images, wrap in picture element without optimization
+      picture = document.createElement('picture');
+      const newImg = document.createElement('img');
+      newImg.src = src;
+      newImg.alt = alt;
+      newImg.loading = 'lazy';
+      picture.appendChild(newImg);
+      moveInstrumentation(img, newImg);
+    } else {
+      // For local images, use createOptimizedPicture
+      picture = createOptimizedPicture(src, alt, false, [{ width: '750' }]);
+      moveInstrumentation(img, picture.querySelector('img'));
+    }
 
-      // Remove the image column from DOM
-      const imgParent = img.closest('div');
-      if (imgParent) {
-        imgParent.remove();
-      }
-
-      // Add picture as first child of banner item (before text)
-      banner.prepend(picture);
+    // Check if img is wrapped in a <p> tag and replace the <p> instead
+    const parentP = img.closest('p');
+    if (parentP) {
+      parentP.replaceWith(picture);
+    } else {
+      img.replaceWith(picture);
     }
   });
 }
