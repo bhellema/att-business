@@ -56,8 +56,8 @@ export default function decorate(block) {
         imgParent.remove();
       }
 
-      // Add picture as direct child of banner item
-      banner.appendChild(picture);
+      // Add picture as first child of banner item (before text)
+      banner.prepend(picture);
     }
   });
 }
