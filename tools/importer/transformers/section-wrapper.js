@@ -43,7 +43,7 @@ export default function transform(hookName, element, payload) {
   const sectionMetadata = WebImporter.Blocks.createBlock(document, {
     name: 'Section Metadata',
     cells: [
-      [createTextDiv(document, 'Style'), createTextDiv(document, 'neutral')]
+      [createTextDiv(document, 'style'), createTextDiv(document, 'neutral')]
     ]
   });
 
