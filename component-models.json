@@ -343,11 +343,20 @@
     "id": "hero-business",
     "fields": [
       {
-        "component": "text",
-        "valueType": "string",
+        "component": "select",
         "name": "classes",
-        "label": "Classes",
-        "multi": false
+        "label": "Theme",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Light",
+            "value": "light"
+          },
+          {
+            "name": "Dark",
+            "value": "dark"
+          }
+        ]
       },
       {
         "component": "reference",
