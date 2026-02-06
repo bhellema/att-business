@@ -241,7 +241,8 @@ var CustomImportScript = (() => {
         pictureEl.appendChild(imgEl);
       }
       const heading = card.querySelector("h4");
-      const description = card.querySelector(".description p");
+      const descriptionEl = card.querySelector(".description");
+      const descriptionP = descriptionEl ? descriptionEl.querySelector("p") : null;
       const terms = card.querySelector(".type-legal p, .type-legal-wysiwyg-editor p");
       const ctaLink = card.querySelector("a.primary-cta");
       const textContent = document.createElement("div");
@@ -250,9 +251,10 @@ var CustomImportScript = (() => {
         headingEl.textContent = heading.textContent.trim();
         textContent.appendChild(headingEl);
       }
-      if (description) {
+      const descText = descriptionP ? descriptionP.textContent.trim() : descriptionEl ? descriptionEl.textContent.trim() : "";
+      if (descText) {
         const descEl = document.createElement("p");
-        descEl.textContent = description.textContent.trim();
+        descEl.textContent = descText;
         textContent.appendChild(descEl);
       }
       if (terms && terms.textContent.trim()) {
@@ -305,6 +307,7 @@ var CustomImportScript = (() => {
         theme = "light";
       }
       let imageSrc = "";
+      let imageAlt = "";
       const styleAttr = banner.getAttribute("style");
       if (styleAttr) {
         const match = styleAttr.match(/--image-desktop:\s*url\(([^)]+)\)/);
@@ -313,17 +316,18 @@ var CustomImportScript = (() => {
           imageSrc = imageSrc.replace(/^['"]|['"]$/g, "");
         }
       }
-      if (!imageSrc) {
-        const imgElement = banner.querySelector("img");
-        if (imgElement && imgElement.src) {
-          imageSrc = imgElement.src;
-        }
+      const imgElement = banner.querySelector("img");
+      if (!imageSrc && imgElement && imgElement.src) {
+        imageSrc = imgElement.src;
+      }
+      if (imgElement && imgElement.alt) {
+        imageAlt = imgElement.alt;
       }
       const pictureEl = document.createElement("picture");
       if (imageSrc) {
         const imgEl = document.createElement("img");
         imgEl.src = imageSrc;
-        imgEl.alt = "banner image";
+        imgEl.alt = imageAlt || "";
         pictureEl.appendChild(imgEl);
       }
       const eyebrow = banner.querySelector(".eyebrow-lg-desktop, .eyebrow-lg-tablet, .eyebrow-lg-mobile, .eyebrow-xxxl-desktop, .eyebrow-xxxl-tablet, .eyebrow-xxxl-mobile");
@@ -547,6 +551,36 @@ var CustomImportScript = (() => {
     }
   }
 
+  // tools/importer/transformers/section-wrapper.js
+  function createTextDiv(document, text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div;
+  }
+  function transform2(hookName, element, payload) {
+    if (hookName !== "afterTransform") return;
+    const { document } = payload;
+    const startEl = Array.from(element.querySelectorAll("h2")).find(
+      (h2) => h2.textContent.trim() === "Why work with AT&T Business?"
+    );
+    if (!startEl) return;
+    const endEl = Array.from(element.querySelectorAll(".micro-banner")).find(
+      (p) => p.textContent.includes("Try AT&T Business for 30 days")
+    );
+    if (!endEl) return;
+    const sectionMetadata = WebImporter.Blocks.createBlock(document, {
+      name: "Section Metadata",
+      cells: [
+        [createTextDiv(document, "Style"), createTextDiv(document, "neutral")]
+      ]
+    });
+    const hrBefore = document.createElement("hr");
+    startEl.parentElement.insertBefore(hrBefore, startEl);
+    const hrAfter = document.createElement("hr");
+    endEl.parentElement.insertBefore(sectionMetadata, endEl);
+    endEl.parentElement.insertBefore(hrAfter, endEl);
+  }
+
   // tools/importer/import-homepage.js
   var parsers = {
     "hero-business": parse,
@@ -557,7 +591,8 @@ var CustomImportScript = (() => {
     "storystack": parse6
   };
   var transformers = [
-    transform
+    transform,
+    transform2
   ];
   var PAGE_TEMPLATE = {
     name: "homepage",

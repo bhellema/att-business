@@ -1,0 +1,17 @@
+{
+  "name": "cards-quiet",
+  "description": "Quiet cards variant with centered icons, headings, descriptions, and quiet links",
+  "sourceContext": {
+    "originUrl": "https://www.business.att.com/",
+    "sectionDescription": "Why work with AT&T Business cards section",
+    "extractedFrom": "Homepage cards section"
+  },
+  "usage": {
+    "pagesUsing": [
+      "/content/index.plain.html"
+    ],
+    "instances": 1
+  },
+  "createdAt": "2026-02-06T17:30:00Z",
+  "variant": "quiet"
+}

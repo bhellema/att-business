@@ -1,27 +1,136 @@
+/* AT&T Business Cards - Quiet Variant */
+.cards-quiet {
+  padding: 64px 0 80px;
+}
+
 .cards-quiet > ul {
   list-style: none;
-  margin: 0;
   padding: 0;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 32px;
+  max-width: 1200px;
 }
 
 .cards-quiet > ul > li {
-  border: 1px solid #dadada;
-  background-color: var(--background-color);
+  border: none;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  flex: 1;
 }
 
-.cards-quiet .cards-quiet-card-body {
-  margin: 16px;
-}
-
+/* Icon/Image styling */
 .cards-quiet .cards-quiet-card-image {
   line-height: 0;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 72px;
 }
 
 .cards-quiet > ul > li img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  width: auto;
+  height: 72px;
+  object-fit: contain;
+}
+
+/* Card body */
+.cards-quiet .cards-quiet-card-body {
+  padding: 0 20px;
+  font-family: attAleckSans, "Helvetica Neue", helvetica, arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Heading - h4 */
+.cards-quiet .cards-quiet-card-body h4 {
+  font-size: 20px;
+  font-weight: 700;
+  color: rgb(29 35 41);
+  margin: 0 0 20px;
+  line-height: 1.3;
+  letter-spacing: -0.2px;
+}
+
+/* First paragraph - main description */
+.cards-quiet .cards-quiet-card-body > p:first-of-type {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgb(69 75 82);
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+
+/* Second paragraph - fine print */
+.cards-quiet .cards-quiet-card-body > p:nth-of-type(2) {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgb(69 75 82);
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+
+/* Last paragraph containing link - pushed to bottom */
+.cards-quiet .cards-quiet-card-body > p:last-child {
+  margin: auto 0 0;
+}
+
+/* Quiet link styling with arrow - override all button styles */
+.cards-quiet .cards-quiet-card-body a,
+.cards-quiet .cards-quiet-card-body a.button {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(0 87 184);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  transition: color 0.2s ease;
+  background: none;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  height: auto;
+  min-width: auto;
+  max-width: none;
+  cursor: pointer;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.cards-quiet .cards-quiet-card-body a::after,
+.cards-quiet .cards-quiet-card-body a.button::after {
+  content: '›';
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.cards-quiet .cards-quiet-card-body a:hover,
+.cards-quiet .cards-quiet-card-body a.button:hover {
+  color: var(--att-blue-light);
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+@media (width >= 900px) {
+  .cards-quiet {
+    padding: 0px 0 20px;
+  }
+
+  .cards-quiet > ul {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+  }
+
+  .cards-quiet .cards-quiet-card-body {
+    padding: 0 16px;
+  }
 }

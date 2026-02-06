@@ -349,3 +349,9 @@ main .section.dark a:any-link {
 main .section.dark a:hover {
   color: var(--att-button-text);
 }
+
+main .section.neutral {
+  background-color: #f3f4f6;
+  margin: 0;
+  padding: 10px 0;
+}

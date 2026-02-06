@@ -43,7 +43,8 @@ export default function parse(element, { document }) {
 
     // Extract text content elements
     const heading = card.querySelector('h4');
-    const description = card.querySelector('.description p');
+    const descriptionEl = card.querySelector('.description');
+    const descriptionP = descriptionEl ? descriptionEl.querySelector('p') : null;
     const terms = card.querySelector('.type-legal p, .type-legal-wysiwyg-editor p');
     const ctaLink = card.querySelector('a.primary-cta');
 
@@ -57,10 +58,13 @@ export default function parse(element, { document }) {
       textContent.appendChild(headingEl);
     }
 
-    // Add description
-    if (description) {
+    // Add description - handle both <p> wrapped and plain text inside .description
+    const descText = descriptionP
+      ? descriptionP.textContent.trim()
+      : (descriptionEl ? descriptionEl.textContent.trim() : '');
+    if (descText) {
       const descEl = document.createElement('p');
-      descEl.textContent = description.textContent.trim();
+      descEl.textContent = descText;
       textContent.appendChild(descEl);
     }
 
