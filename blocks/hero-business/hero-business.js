@@ -1,6 +1,10 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 
 export default function decorate(block) {
+  // EDS automatically applies variant classes from block name
+  // e.g., "hero-business (dark)" → block gets class "dark"
+  // No need to manually process variant classes
+
   // Get the two main divs (image and text)
   const children = [...block.children];
 

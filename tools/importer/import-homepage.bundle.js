@@ -27,6 +27,25 @@ var CustomImportScript = (() => {
   function parse(element, { document }) {
     let heroImage = null;
     let imageAlt = "";
+    let theme = "";
+    const heroWrapper = element.closest(".hero-wrapper") || element.querySelector(".hero-wrapper");
+    if (heroWrapper) {
+      if (heroWrapper.classList.contains("theme-dark-bg-img")) {
+        theme = "dark";
+      } else if (heroWrapper.classList.contains("theme-light-bg-img")) {
+        theme = "light";
+      }
+    }
+    if (!theme) {
+      if (element.classList.contains("theme-dark-bg-img")) {
+        theme = "dark";
+      } else if (element.classList.contains("theme-light-bg-img")) {
+        theme = "light";
+      }
+    }
+    if (!theme) {
+      theme = "light";
+    }
     const heroAbsoluteFill = element.querySelector(".custom-hero-absolute-fill[data-desktop]");
     if (heroAbsoluteFill) {
       const desktopImageUrl = heroAbsoluteFill.getAttribute("data-desktop");
@@ -111,7 +130,8 @@ var CustomImportScript = (() => {
       [textFrag]
       // Row 2, column 1
     ];
-    const block = WebImporter.Blocks.createBlock(document, { name: "hero-business", cells });
+    const blockName = `hero-business (${theme})`;
+    const block = WebImporter.Blocks.createBlock(document, { name: blockName, cells });
     element.replaceWith(block);
   }
 

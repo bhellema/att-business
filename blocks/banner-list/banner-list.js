@@ -9,7 +9,8 @@ export default function decorate(block) {
     const classesCell = banner.querySelector('div:first-child');
     if (classesCell) {
       const classesText = classesCell.textContent.trim();
-      // Extract classes from comma-separated text (e.g., "banner-item, dark" -> ["banner-item", "dark"])
+      // Extract classes from comma-separated text
+      // (e.g., "banner-item, dark" -> ["banner-item", "dark"])
       const classNames = classesText.split(',').map((c) => c.trim());
       classNames.forEach((className) => {
         if (className && className !== 'banner-item') {

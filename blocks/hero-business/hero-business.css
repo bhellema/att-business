@@ -57,6 +57,87 @@
   height: 100%;
 }
 
+/* Dark theme styling - white text on dark background */
+.hero-business.dark h1,
+.hero-business.dark h2 {
+  color: #fff;
+}
+
+.hero-business.dark p {
+  color: #fff;
+}
+
+/* Button container - display buttons in a row */
+.hero-business-text > p:has(a.button) {
+  display: inline-block;
+  margin: 0 16px 0 0;
+}
+
+/* Base button styling */
+.hero-business a.button {
+  border-radius: 28px;
+  padding: 0 32px;
+  height: 56px;
+  font-size: 16px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  width: fit-content;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+/* Dark theme paragraph styling (more specific) */
+.hero-business.dark p:nth-of-type(3) {
+  color: rgb(255 255 255 / 80%);
+}
+
+/* First button - theme variants */
+.hero-business.dark a.button:first-of-type {
+  background-color: #fff;
+  color: var(--att-blue);
+}
+
+.hero-business.light a.button:first-of-type {
+  background-color: var(--att-blue);
+  color: #fff;
+}
+
+/* Button hover states - first button (must come before second button selectors) */
+.hero-business.dark a.button:first-of-type:hover {
+  background-color: rgb(255 255 255 / 90%);
+  color: var(--att-blue);
+}
+
+.hero-business.light a.button:first-of-type:hover {
+  background-color: rgb(0 87 184 / 90%);
+  color: #fff;
+}
+
+/* Second button - transparent with border (most specific) */
+.hero-business.dark p:has(a.button) + p:has(a.button) a.button {
+  background-color: transparent;
+  color: #fff;
+  border-color: #fff;
+}
+
+.hero-business.light p:has(a.button) + p:has(a.button) a.button {
+  background-color: transparent;
+  color: var(--att-blue);
+  border-color: var(--att-blue);
+}
+
+/* Button hover states - second button (most specific, comes last) */
+.hero-business.dark p:has(a.button) + p:has(a.button) a.button:hover {
+  background-color: rgb(255 255 255 / 10%);
+}
+
+.hero-business.light p:has(a.button) + p:has(a.button) a.button:hover {
+  background-color: rgb(0 87 184 / 10%);
+}
+
 @media (width >= 900px) {
   .hero-business {
     padding: 40px 32px;

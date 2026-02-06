@@ -12,12 +12,46 @@
  * - Field 2: imageAlt (text) - Image alt text
  * - Field 3: text (richtext) - Eyebrow, heading, and paragraph content
  *
- * Generated: 2026-02-05
+ * Variant Detection:
+ * - Inspects .hero-wrapper.theme-dark-bg-img → variant "dark" → "hero-business (dark)"
+ * - Inspects .hero-wrapper.theme-light-bg-img → variant "light" → "hero-business (light)"
+ * - Fallback: checks element itself for theme classes
+ * - Default: "light" → "hero-business (light)"
+ *
+ * Generated: 2026-02-06
  */
 
 export default function parse(element, { document }) {
   let heroImage = null;
   let imageAlt = '';
+
+  // Detect theme from hero-wrapper element
+  let theme = '';
+
+  // Look for theme on .hero-wrapper (parent or sibling)
+  const heroWrapper = element.closest('.hero-wrapper') || element.querySelector('.hero-wrapper');
+
+  if (heroWrapper) {
+    if (heroWrapper.classList.contains('theme-dark-bg-img')) {
+      theme = 'dark';
+    } else if (heroWrapper.classList.contains('theme-light-bg-img')) {
+      theme = 'light';
+    }
+  }
+
+  // Fallback: check element itself
+  if (!theme) {
+    if (element.classList.contains('theme-dark-bg-img')) {
+      theme = 'dark';
+    } else if (element.classList.contains('theme-light-bg-img')) {
+      theme = 'light';
+    }
+  }
+
+  // Default to light if no theme detected
+  if (!theme) {
+    theme = 'light';
+  }
 
   // First priority: Check for data-desktop attribute on custom-hero-absolute-fill
   const heroAbsoluteFill = element.querySelector('.custom-hero-absolute-fill[data-desktop]');
@@ -137,12 +171,13 @@ export default function parse(element, { document }) {
   // Row 1: image (reference field with collapsed imageAlt)
   // Row 2: text (richtext field)
   const cells = [
-    [imageFrag],  // Row 1, column 1
-    [textFrag]    // Row 2, column 1
+    [imageFrag],   // Row 1, column 1
+    [textFrag]     // Row 2, column 1
   ];
 
-  // Use exact variant name from block variant management
-  const block = WebImporter.Blocks.createBlock(document, { name: 'hero-business', cells });
+  // Use variant naming convention: "block-name (variant)"
+  const blockName = `hero-business (${theme})`;
+  const block = WebImporter.Blocks.createBlock(document, { name: blockName, cells });
 
   // Replace element with block
   element.replaceWith(block);

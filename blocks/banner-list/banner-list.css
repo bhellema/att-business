@@ -1,6 +1,6 @@
 /* AT&T Business Banner List - Pinterest-like grid layout */
 .banner-list-container .banner-list-wrapper {
-  max-width: unset;
+  max-width: 1324px;
   padding: 0;
 }
 
@@ -53,6 +53,7 @@
 .banner-list-item > div {
   position: relative;
   z-index: 2;
+  max-width: 50%;
 }
 
 /* Text styling */
@@ -74,7 +75,7 @@
 .banner-list-item p {
   color: #fff;
   margin-top: 0;
-  margin-bottom: 12px;
+  margin-bottom: 0;
   text-align: left;
 }
 
@@ -86,32 +87,22 @@
 }
 
 .banner-list-item.light p {
-  color: #000;
+  color: var(--baem-text-body);
 }
 
-/* First paragraph - eyebrow text */
-.banner-list-item > div > div > p:first-of-type {
+/* Specific paragraph position styling - more specific, comes after general */
+.banner-list-item p:nth-of-type(2) {
+  font-weight: 400;
   font-size: 18px;
-  font-weight: 400;
-  margin-bottom: 8px;
+  font-family: attAleckSans-Regular, Arial, sans-serif;
 }
 
-/* Second paragraph - body text */
-.banner-list-item > div > div > p:nth-of-type(2) {
-  font-size: 20px;
-  font-weight: 400;
-  margin-bottom: 16px;
+.banner-list-item p:nth-of-type(3) {
+  margin-top: 8px;
+  font-size: 12px;
 }
 
-/* Third paragraph - fine print */
-.banner-list-item > div > div > p:nth-of-type(3) {
-  font-size: 14px;
-  font-weight: 400;
-  color: rgb(255 255 255 / 60%);
-  margin-bottom: 24px;
-}
-
-/* Light theme fine print - slightly transparent black */
+/* Light theme fine print - most specific, comes last */
 .banner-list-item.light > div > div > p:nth-of-type(3) {
   color: rgb(0 0 0 / 60%);
 }
@@ -138,9 +129,26 @@
   color: var(--att-blue);
 }
 
+/* Light theme button - blue background with white text */
+.banner-list-item.light a.button {
+  background-color: var(--att-blue);
+  color: #fff;
+}
+
+.banner-list-item.light a.button:hover {
+  background-color: rgb(0 87 184 / 90%);
+  color: #fff;
+}
+
 @media (width >= 900px) {
   .banner-list-item {
     padding: 60px 48px;
-    min-height: 500px;
+    max-height: 500px;
+
+    &:nth-child(3) {
+      min-height: 300px !important;
+      max-height: 300px !important;
+      height: 100%;
+    }
   }
 }
