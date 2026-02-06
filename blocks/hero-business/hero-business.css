@@ -1,5 +1,5 @@
-.hero-business-container .hero-wrapper {
-  max-width: unset;
+.hero-business-container .hero-business-wrapper {
+  max-width: 1600px;
   padding: 0;
 }
 
@@ -12,6 +12,8 @@
   overflow: hidden;
   display: flex;
   align-items: center;
+  max-height: 450px;
+  height: 100%;
 }
 
 .hero-business-text {
