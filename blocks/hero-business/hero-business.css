@@ -12,8 +12,7 @@
   overflow: hidden;
   display: flex;
   align-items: center;
-  max-height: 450px;
-  height: 100%;
+  height: 415px;
 }
 
 .hero-business-text {
