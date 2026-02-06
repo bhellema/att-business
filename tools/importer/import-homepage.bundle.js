@@ -323,7 +323,7 @@ var CustomImportScript = (() => {
       if (imageSrc) {
         const imgEl = document.createElement("img");
         imgEl.src = imageSrc;
-        imgEl.alt = "";
+        imgEl.alt = "banner image";
         pictureEl.appendChild(imgEl);
       }
       const eyebrow = banner.querySelector(".eyebrow-lg-desktop, .eyebrow-lg-tablet, .eyebrow-lg-mobile, .eyebrow-xxxl-desktop, .eyebrow-xxxl-tablet, .eyebrow-xxxl-mobile");

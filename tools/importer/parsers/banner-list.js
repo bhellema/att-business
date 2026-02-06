@@ -58,6 +58,7 @@ export default function parse(element, { document }) {
 
     // Extract image - different sources depending on banner type
     let imageSrc = '';
+    let imageAlt = '';
 
     // Try CSS custom property first (flex-cards)
     const styleAttr = banner.getAttribute('style');
@@ -70,11 +71,14 @@ export default function parse(element, { document }) {
     }
 
     // If no CSS image, try <img> tag (hero elements)
-    if (!imageSrc) {
-      const imgElement = banner.querySelector('img');
-      if (imgElement && imgElement.src) {
-        imageSrc = imgElement.src;
-      }
+    const imgElement = banner.querySelector('img');
+    if (!imageSrc && imgElement && imgElement.src) {
+      imageSrc = imgElement.src;
+    }
+
+    // Extract alt text from img element if available
+    if (imgElement && imgElement.alt) {
+      imageAlt = imgElement.alt;
     }
 
     // Create picture element for image
@@ -82,7 +86,7 @@ export default function parse(element, { document }) {
     if (imageSrc) {
       const imgEl = document.createElement('img');
       imgEl.src = imageSrc;
-      imgEl.alt = '';  // Banner images are decorative
+      imgEl.alt = imageAlt || '';
       pictureEl.appendChild(imgEl);
     }
 

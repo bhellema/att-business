@@ -7,57 +7,55 @@ export default function decorate(block) {
   banners.forEach((banner) => {
     banner.classList.add('banner-list-item');
 
-    // Get the classes from the first cell (classes field)
-    const classesCell = banner.querySelector('div:first-child');
-    if (classesCell) {
-      const classesText = classesCell.textContent.trim();
-      // Extract classes from comma-separated text
-      // (e.g., "banner-item, dark" -> ["banner-item", "dark"])
-      const classNames = classesText.split(',').map((c) => c.trim());
-      classNames.forEach((className) => {
-        if (className && className !== 'banner-item') {
-          banner.classList.add(className);
-        }
-      });
-      // Remove the classes cell from DOM
-      classesCell.remove();
+    // Get all child divs
+    const children = [...banner.children];
+
+    // First child is classes field - remove it
+    if (children[0]) {
+      children[0].remove();
     }
 
-    // Find image and create optimized picture element
-    const img = banner.querySelector('img');
-    if (img) {
-      const { src, alt } = img;
+    // After removing classes, get updated children
+    const updatedChildren = [...banner.children];
 
-      // Check if image is external (not from same origin)
-      const isExternal = src.startsWith('http') && !src.startsWith(window.location.origin);
+    // First remaining div contains the image
+    if (updatedChildren[0]) {
+      updatedChildren[0].classList.add('banner-list-item-image');
 
-      let picture;
-      if (isExternal) {
-        // For external images, create picture without optimization
-        picture = document.createElement('picture');
-        const newImg = document.createElement('img');
-        newImg.src = src;
-        newImg.alt = alt;
-        newImg.loading = 'lazy';
-        picture.appendChild(newImg);
-      } else {
-        // For local images, use createOptimizedPicture
-        picture = createOptimizedPicture(
-          src,
-          alt,
-          false,
-          [{ width: '1600' }, { width: '1200' }, { width: '750' }],
-        );
+      // Find image and create optimized picture element
+      const img = updatedChildren[0].querySelector('img');
+      if (img) {
+        const { src, alt } = img;
+
+        // Check if image is external (not from same origin)
+        const isExternal = src.startsWith('http') && !src.startsWith(window.location.origin);
+
+        let picture;
+        if (isExternal) {
+          // For external images, create picture without optimization
+          picture = document.createElement('picture');
+          const newImg = document.createElement('img');
+          newImg.src = src;
+          newImg.alt = alt || 'background';
+          newImg.loading = 'lazy';
+          picture.appendChild(newImg);
+        } else {
+          // For local images, use createOptimizedPicture
+          picture = createOptimizedPicture(
+            src,
+            alt || 'background',
+            false,
+            [{ width: '1600' }, { width: '1200' }, { width: '750' }],
+          );
+        }
+
+        img.replaceWith(picture);
       }
+    }
 
-      // Remove the image column (div containing the image)
-      const imgParent = img.closest('div');
-      if (imgParent) {
-        imgParent.remove();
-      }
-
-      // Add picture as direct child of banner item
-      banner.prepend(picture);
+    // Second remaining div contains the text content
+    if (updatedChildren[1]) {
+      updatedChildren[1].classList.add('banner-list-item-text');
     }
   });
 }
