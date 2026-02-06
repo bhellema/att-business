@@ -36,7 +36,7 @@
 }
 
 /* Picture element positioned as background */
-.banner-list-item > picture {
+.banner-list-item picture {
   position: absolute;
   z-index: 1;
   inset: 0;
@@ -44,7 +44,7 @@
   box-sizing: border-box;
 }
 
-.banner-list-item > picture > img {
+.banner-list-item img {
   object-fit: cover;
   width: 100%;
   height: 100%;
@@ -76,7 +76,7 @@
 .banner-list-item p {
   color: #fff;
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: 12px;
   text-align: left;
 }
 
@@ -91,20 +91,30 @@
   color: var(--baem-text-body);
 }
 
-/* Specific paragraph position styling - more specific, comes after general */
-.banner-list-item p:nth-of-type(2) {
-  font-weight: 400;
+/* First paragraph - eyebrow text */
+.banner-list-item > div > div > p:first-of-type {
   font-size: 18px;
-  font-family: attAleckSans-Regular, Arial, sans-serif;
+  font-weight: 400;
+  margin-bottom: 8px;
 }
 
-.banner-list-item p:nth-of-type(3) {
-  margin-top: 8px;
-  font-size: 12px;
+/* Second paragraph - body text */
+.banner-list-item > div > div > p:nth-of-type(2) {
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+/* Third paragraph - fine print */
+.banner-list-item > div > div > p:nth-of-type(3) {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgb(255 255 255 / 60%);
+  margin-bottom: 24px;
 }
 
 /* Light theme fine print - most specific, comes last */
-.banner-list-item.light > div > p:nth-of-type(3) {
+.banner-list-item.light > div > div > p:nth-of-type(3) {
   color: rgb(0 0 0 / 60%);
 }
 
