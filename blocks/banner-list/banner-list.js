@@ -1,4 +1,5 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
+import { moveInstrumentation } from '../../scripts/scripts.js';
 
 export default function decorate(block) {
   // Each row in the block becomes a banner item
@@ -50,9 +51,9 @@ export default function decorate(block) {
         }
 
         img.replaceWith(picture);
+        moveInstrumentation(img, picture.querySelector('img'));
       }
     }
-
     // Second remaining div contains the text content
     if (updatedChildren[1]) {
       updatedChildren[1].classList.add('banner-list-item-text');
