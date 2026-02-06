@@ -161,6 +161,37 @@
     ]
   },
   {
+    "id": "banner-list",
+    "fields": [
+      {
+        "component": "container",
+        "name": "items",
+        "label": "Banner Items",
+        "valueType": "string",
+        "multi": true
+      }
+    ]
+  },
+  {
+    "id": "banner-item",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "number",
+        "name": "columns",
+        "value": "2",
+        "label": "Columns"
+      },
+      {
+        "component": "text",
+        "valueType": "number",
+        "name": "rows",
+        "value": "1",
+        "label": "Rows"
+      }
+    ]
+  },
+  {
     "id": "banner",
     "fields": [
       {

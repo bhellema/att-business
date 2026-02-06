@@ -52,13 +52,14 @@ export default function parse(element, { document }) {
 
   imageAlt = (heroImage && heroImage.alt) || '';
 
-  // Extract text content elements
+  // Build richtext content (eyebrow + heading + paragraph + links)
+  const textContent = document.createElement('div');
+
+  // Extract eyebrow
   const eyebrow = element.querySelector('.eyebrow-xxxl-desktop, .eyebrow-heading');
 
   // Get heading - try multiple strategies
-  // Strategy 1: heading-seo class
   let heading = element.querySelector('.heading-seo');
-  // Strategy 2: if not found or empty, try all h2s and find first non-empty one
   if (!heading || !heading.textContent.trim()) {
     const allH2s = element.querySelectorAll('h2');
     for (const h2 of allH2s) {
@@ -69,11 +70,17 @@ export default function parse(element, { document }) {
     }
   }
 
-  const description = element.querySelector('.wysiwyg-editor p, .type-base p');
+  // Get all paragraphs (may be multiple)
+  const paragraphs = Array.from(element.querySelectorAll('.wysiwyg-editor p, .type-base p, .type-legal p'));
 
-  // Build richtext content (eyebrow + heading + paragraph)
-  const textContent = document.createElement('div');
+  // Get CTA links
+  const ctaLinks = Array.from(element.querySelectorAll('.cta-container a, a[href]')).filter(link => {
+    // Filter to only actual CTA links (not empty or javascript:void)
+    const href = link.getAttribute('href');
+    return href && !href.startsWith('javascript:') && link.textContent.trim();
+  });
 
+  // Build content structure
   if (eyebrow) {
     const eyebrowEl = document.createElement('p');
     eyebrowEl.className = 'eyebrow';
@@ -87,11 +94,24 @@ export default function parse(element, { document }) {
     textContent.appendChild(headingEl);
   }
 
-  if (description) {
-    const descEl = document.createElement('p');
-    descEl.textContent = description.textContent.trim();
-    textContent.appendChild(descEl);
-  }
+  // Add all paragraphs
+  paragraphs.forEach(p => {
+    if (p.textContent.trim()) {
+      const descEl = document.createElement('p');
+      descEl.textContent = p.textContent.trim();
+      textContent.appendChild(descEl);
+    }
+  });
+
+  // Add CTA links (limit to first 2)
+  ctaLinks.slice(0, 2).forEach(link => {
+    const ctaEl = document.createElement('p');
+    const linkEl = document.createElement('a');
+    linkEl.href = link.getAttribute('href');
+    linkEl.textContent = link.textContent.trim();
+    ctaEl.appendChild(linkEl);
+    textContent.appendChild(ctaEl);
+  });
 
   // Create picture element with collapsed imageAlt field
   // xwalk uses <picture><img> for image references

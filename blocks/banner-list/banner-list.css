@@ -1,20 +1,33 @@
-/* AT&T Business Banner - Text overlay on image */
-.banner-container .banner-wrapper {
+/* AT&T Business Banner List - Pinterest-like grid layout */
+.banner-list-container .banner-list-wrapper {
   max-width: unset;
   padding: 0;
 }
 
-.banner {
+.banner-list {
+  display: grid;
+  grid-template-columns: 2fr 1fr; /* 66% | 33% split */
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+/* Banner list items (individual banners) */
+.banner-list-item {
   position: relative;
   border-radius: 16px;
   overflow: hidden;
-  margin-bottom: 32px;
   min-height: 400px;
   padding: 40px 24px;
+  margin: 0;
+}
+
+/* Third item spans full width */
+.banner-list-item:nth-child(3) {
+  grid-column: 1 / -1;
 }
 
 /* Black background layer */
-.banner::before {
+.banner-list-item::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -22,7 +35,7 @@
   z-index: 0;
 }
 
-.banner picture {
+.banner-list-item picture {
   position: absolute;
   z-index: 1;
   inset: 0;
@@ -30,35 +43,35 @@
   box-sizing: border-box;
 }
 
-.banner img {
+.banner-list-item img {
   object-fit: cover;
   width: 100%;
   height: 100%;
 }
 
 /* Text content positioned above background and image */
-.banner > div {
+.banner-list-item > div {
   position: relative;
   z-index: 2;
 }
 
 /* Text styling */
-.banner h2,
-.banner h3,
-.banner h4 {
+.banner-list-item h2,
+.banner-list-item h3,
+.banner-list-item h4 {
   color: #fff;
   margin-top: 0;
   margin-bottom: 12px;
   text-align: left;
 }
 
-.banner h2 {
+.banner-list-item h2 {
   font-size: 38px;
   font-weight: 700;
   line-height: 1.2;
 }
 
-.banner p {
+.banner-list-item p {
   color: #fff;
   margin-top: 0;
   margin-bottom: 12px;
@@ -66,21 +79,21 @@
 }
 
 /* First paragraph - eyebrow text */
-.banner > div > div > p:first-of-type {
+.banner-list-item > div > div > p:first-of-type {
   font-size: 18px;
   font-weight: 400;
   margin-bottom: 8px;
 }
 
 /* Second paragraph - body text */
-.banner > div > div > p:nth-of-type(2) {
+.banner-list-item > div > div > p:nth-of-type(2) {
   font-size: 20px;
   font-weight: 400;
   margin-bottom: 16px;
 }
 
 /* Third paragraph - fine print */
-.banner > div > div > p:nth-of-type(3) {
+.banner-list-item > div > div > p:nth-of-type(3) {
   font-size: 14px;
   font-weight: 400;
   color: rgb(255 255 255 / 60%);
@@ -88,7 +101,7 @@
 }
 
 /* Button styling */
-.banner a.button {
+.banner-list-item a.button {
   background-color: #fff;
   color: var(--att-blue);
   border-radius: 28px;
@@ -104,13 +117,13 @@
   margin-top: 12px;
 }
 
-.banner a.button:hover {
+.banner-list-item a.button:hover {
   background-color: rgb(255 255 255 / 90%);
   color: var(--att-blue);
 }
 
 @media (width >= 900px) {
-  .banner {
+  .banner-list-item {
     padding: 60px 48px;
     min-height: 500px;
   }

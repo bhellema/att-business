@@ -4,14 +4,14 @@
 /**
  * Import script for homepage template
  * Template: AT&T Business homepage with hero section
- * Generated: 2026-02-05T15:30:00.000Z
+ * Generated: 2026-02-06T02:07:00.000Z
  */
 
 // PARSER IMPORTS - Import all parsers needed for this template
 import heroBusinessParser from './parsers/hero-business.js';
 import cardsParser from './parsers/cards.js';
 import cardsQuietParser from './parsers/cards-quiet.js';
-import bannerParser from './parsers/banner.js';
+import bannerListParser from './parsers/banner-list.js';
 import carouselParser from './parsers/carousel.js';
 import storystackParser from './parsers/storystack.js';
 
@@ -23,7 +23,7 @@ const parsers = {
   'hero-business': heroBusinessParser,
   'cards': cardsParser,
   'cards-quiet': cardsQuietParser,
-  'banner': bannerParser,
+  'banner-list': bannerListParser,
   'carousel': carouselParser,
   'storystack': storystackParser,
 };
@@ -43,19 +43,19 @@ const PAGE_TEMPLATE = {
   blocks: [
     {
       name: 'hero-business',
-      instances: ['.custom-target > .hero']
+      instances: ['.hero']
     },
     {
       name: 'cards',
       instances: ['.multi-tile-row']
     },
     {
-      name: 'cards-quiet',
-      instances: ['.generic-list-icon-vp-row']
+      name: 'banner-list',
+      instances: ['.flex-cards']
     },
     {
-      name: 'banner',
-      instances: ['.flex-cards', '.aem-Grid > .hero']
+      name: 'cards-quiet',
+      instances: ['.generic-list-icon-vp-row']
     },
     {
       name: 'carousel',

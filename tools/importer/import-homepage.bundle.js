@@ -49,6 +49,7 @@ var CustomImportScript = (() => {
       heroImage = { src: desktopSrc, alt: heroImage.alt };
     }
     imageAlt = heroImage && heroImage.alt || "";
+    const textContent = document.createElement("div");
     const eyebrow = element.querySelector(".eyebrow-xxxl-desktop, .eyebrow-heading");
     let heading = element.querySelector(".heading-seo");
     if (!heading || !heading.textContent.trim()) {
@@ -60,8 +61,11 @@ var CustomImportScript = (() => {
         }
       }
     }
-    const description = element.querySelector(".wysiwyg-editor p, .type-base p");
-    const textContent = document.createElement("div");
+    const paragraphs = Array.from(element.querySelectorAll(".wysiwyg-editor p, .type-base p, .type-legal p"));
+    const ctaLinks = Array.from(element.querySelectorAll(".cta-container a, a[href]")).filter((link) => {
+      const href = link.getAttribute("href");
+      return href && !href.startsWith("javascript:") && link.textContent.trim();
+    });
     if (eyebrow) {
       const eyebrowEl = document.createElement("p");
       eyebrowEl.className = "eyebrow";
@@ -73,11 +77,21 @@ var CustomImportScript = (() => {
       headingEl.textContent = heading.textContent.trim();
       textContent.appendChild(headingEl);
     }
-    if (description) {
-      const descEl = document.createElement("p");
-      descEl.textContent = description.textContent.trim();
-      textContent.appendChild(descEl);
-    }
+    paragraphs.forEach((p) => {
+      if (p.textContent.trim()) {
+        const descEl = document.createElement("p");
+        descEl.textContent = p.textContent.trim();
+        textContent.appendChild(descEl);
+      }
+    });
+    ctaLinks.slice(0, 2).forEach((link) => {
+      const ctaEl = document.createElement("p");
+      const linkEl = document.createElement("a");
+      linkEl.href = link.getAttribute("href");
+      linkEl.textContent = link.textContent.trim();
+      ctaEl.appendChild(linkEl);
+      textContent.appendChild(ctaEl);
+    });
     const pictureEl = document.createElement("picture");
     if (heroImage) {
       const imgEl = document.createElement("img");
@@ -247,7 +261,7 @@ var CustomImportScript = (() => {
     element.replaceWith(block);
   }
 
-  // tools/importer/parsers/banner.js
+  // tools/importer/parsers/banner-list.js
   function parse4(element, { document }) {
     let bannerElements = [];
     if (element.classList.contains("hero")) {
@@ -259,7 +273,7 @@ var CustomImportScript = (() => {
       console.warn("No banner elements found");
       return;
     }
-    const bannerContainer = document.createElement("div");
+    const bannerItems = [];
     bannerElements.forEach((banner, index) => {
       let imageSrc = "";
       const styleAttr = banner.getAttribute("style");
@@ -305,7 +319,7 @@ var CustomImportScript = (() => {
         textContent.appendChild(eyebrowEl);
       }
       if (heading) {
-        const headingEl = document.createElement("h3");
+        const headingEl = document.createElement("h2");
         headingEl.textContent = heading.textContent.trim();
         textContent.appendChild(headingEl);
       }
@@ -330,14 +344,13 @@ var CustomImportScript = (() => {
           textContent.appendChild(ctaEl);
         }
       });
-      const cells = [
-        [pictureEl, textContent]
-        // Row 1: column 1 (image), column 2 (text)
-      ];
-      const block = WebImporter.Blocks.createBlock(document, { name: "banner", cells });
-      bannerContainer.appendChild(block);
+      bannerItems.push([pictureEl, textContent]);
     });
-    element.replaceWith(bannerContainer);
+    const block = WebImporter.Blocks.createBlock(document, {
+      name: "banner-list",
+      cells: bannerItems
+    });
+    element.replaceWith(block);
   }
 
   // tools/importer/parsers/carousel.js
@@ -509,7 +522,7 @@ var CustomImportScript = (() => {
     "hero-business": parse,
     "cards": parse2,
     "cards-quiet": parse3,
-    "banner": parse4,
+    "banner-list": parse4,
     "carousel": parse5,
     "storystack": parse6
   };
@@ -525,19 +538,19 @@ var CustomImportScript = (() => {
     blocks: [
       {
         name: "hero-business",
-        instances: [".custom-target > .hero"]
+        instances: [".hero"]
       },
       {
         name: "cards",
         instances: [".multi-tile-row"]
       },
       {
-        name: "cards-quiet",
-        instances: [".generic-list-icon-vp-row"]
+        name: "banner-list",
+        instances: [".flex-cards"]
       },
       {
-        name: "banner",
-        instances: [".flex-cards", ".aem-Grid > .hero"]
+        name: "cards-quiet",
+        instances: [".generic-list-icon-vp-row"]
       },
       {
         name: "carousel",

@@ -10,7 +10,7 @@
         {
           "name": "hero-business",
           "instances": [
-            ".custom-target > .hero"
+            ".hero"
           ]
         },
         {
@@ -20,10 +20,9 @@
           ]
         },
         {
-          "name": "banner",
+          "name": "banner-list",
           "instances": [
-            ".flex-cards",
-            ".aem-Grid > .hero"
+            ".flex-cards"
           ]
         },
         {
