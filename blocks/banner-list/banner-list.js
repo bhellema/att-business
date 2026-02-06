@@ -6,6 +6,12 @@ export default function decorate(block) {
   const banners = [...block.children];
 
   banners.forEach((banner) => {
+    // if there are three children, then remove the first one
+    if (banner.children.length === 3) {
+      // remove the first child
+      banner.children[0].remove();
+    }
+
     banner.classList.add('banner-list-item');
 
     const children = [...banner.children];
@@ -24,12 +30,22 @@ export default function decorate(block) {
 
         let picture;
         if (isExternal) {
-          // For external images, create picture without optimization
           picture = document.createElement('picture');
           const newImg = document.createElement('img');
           newImg.src = src;
           newImg.alt = alt || 'background';
           newImg.loading = 'lazy';
+          [
+            { width: 1600, media: '(min-width: 1600px)' },
+            { width: 1200, media: '(min-width: 1200px)' },
+            { width: 750, media: '(min-width: 750px)' },
+          ].forEach(({ width, media }) => {
+            const source = document.createElement('source');
+            source.srcset = `${src}?width=${width}&format=webply&optimize=medium`;
+            source.type = 'image/webp';
+            source.media = media;
+            picture.appendChild(source);
+          });
           picture.appendChild(newImg);
         } else {
           // For local images, use createOptimizedPicture
@@ -41,8 +57,13 @@ export default function decorate(block) {
           );
         }
 
-        img.replaceWith(picture);
         moveInstrumentation(img, picture.querySelector('img'));
+        const parentP = img.closest('p');
+        if (parentP) {
+          parentP.replaceWith(picture);
+        } else {
+          img.replaceWith(picture);
+        }
       }
     }
     // Second remaining div contains the text content
