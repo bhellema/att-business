@@ -78,6 +78,17 @@
   text-align: left;
 }
 
+/* Light theme styling - black text on light background */
+.banner-list-item.light h2,
+.banner-list-item.light h3,
+.banner-list-item.light h4 {
+  color: #000;
+}
+
+.banner-list-item.light p {
+  color: #000;
+}
+
 /* First paragraph - eyebrow text */
 .banner-list-item > div > div > p:first-of-type {
   font-size: 18px;
@@ -98,6 +109,11 @@
   font-weight: 400;
   color: rgb(255 255 255 / 60%);
   margin-bottom: 24px;
+}
+
+/* Light theme fine print - slightly transparent black */
+.banner-list-item.light > div > div > p:nth-of-type(3) {
+  color: rgb(0 0 0 / 60%);
 }
 
 /* Button styling */

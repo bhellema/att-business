@@ -164,6 +164,13 @@
     "id": "banner-item",
     "fields": [
       {
+        "component": "text",
+        "valueType": "string",
+        "name": "classes",
+        "label": "Classes",
+        "multi": false
+      },
+      {
         "component": "reference",
         "valueType": "string",
         "name": "image",

@@ -10,8 +10,14 @@
  * Block Structure (Universal Editor xwalk format):
  * Container block with multiple banner-item children
  * Each banner-item contains:
- * - Column 1: image (background image extracted)
- * - Column 2: text (richtext with eyebrow, heading, description, terms, CTA)
+ * - Column 1: classes (text) - "banner-item light" or "banner-item dark"
+ * - Column 2: image (reference) - Background image extracted
+ * - Column 3: text (richtext) - Eyebrow, heading, description, terms, CTA
+ *
+ * Theme Detection:
+ * - Inspects .card.theme-light-bg-img → "light"
+ * - Inspects .card.theme-dark-bg-img → "dark"
+ * - Default: "light"
  *
  * Generated: 2026-02-06
  */
@@ -38,6 +44,18 @@ export default function parse(element, { document }) {
 
   // Process each banner element as a banner-item
   bannerElements.forEach((banner, index) => {
+    // Detect theme from banner classes
+    let theme = '';
+    if (banner.classList.contains('theme-light-bg-img')) {
+      theme = 'light';
+    } else if (banner.classList.contains('theme-dark-bg-img')) {
+      theme = 'dark';
+    }
+    // Default to light if no theme detected
+    if (!theme) {
+      theme = 'light';
+    }
+
     // Extract image - different sources depending on banner type
     let imageSrc = '';
 
@@ -132,8 +150,12 @@ export default function parse(element, { document }) {
       }
     });
 
-    // Each banner-item is a row with 2 columns (image, text)
-    bannerItems.push([pictureEl, textContent]);
+    // Create classes cell with "banner-item" and theme (comma-separated)
+    const classesText = `banner-item, ${theme}`;
+
+    // Each banner-item is a row with 3 columns (classes, image, text)
+    // Classes must be first column per Universal Editor rules
+    bannerItems.push([classesText, pictureEl, textContent]);
   });
 
   // Create banner-list block with all banner-items as rows

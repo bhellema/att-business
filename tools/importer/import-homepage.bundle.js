@@ -275,6 +275,15 @@ var CustomImportScript = (() => {
     }
     const bannerItems = [];
     bannerElements.forEach((banner, index) => {
+      let theme = "";
+      if (banner.classList.contains("theme-light-bg-img")) {
+        theme = "light";
+      } else if (banner.classList.contains("theme-dark-bg-img")) {
+        theme = "dark";
+      }
+      if (!theme) {
+        theme = "light";
+      }
       let imageSrc = "";
       const styleAttr = banner.getAttribute("style");
       if (styleAttr) {
@@ -344,7 +353,8 @@ var CustomImportScript = (() => {
           textContent.appendChild(ctaEl);
         }
       });
-      bannerItems.push([pictureEl, textContent]);
+      const classesText = `banner-item, ${theme}`;
+      bannerItems.push([classesText, pictureEl, textContent]);
     });
     const block = WebImporter.Blocks.createBlock(document, {
       name: "banner-list",
