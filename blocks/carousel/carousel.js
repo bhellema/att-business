@@ -36,10 +36,20 @@ function updateActiveSlide(slide) {
 }
 
 export function showSlide(block, slideIndex = 0, behavior = 'smooth') {
+  // Prevent clicks during transitions
+  if (behavior === 'smooth' && block.dataset.isTransitioning === 'true') {
+    return;
+  }
+
   const realSlides = block.querySelectorAll('.carousel-slide:not(.carousel-slide-clone)');
   const slidesContainer = block.querySelector('.carousel-slides');
   const allSlides = Array.from(slidesContainer.querySelectorAll('.carousel-slide'));
   const totalRealSlides = realSlides.length;
+
+  // Set transitioning flag
+  if (behavior === 'smooth') {
+    block.dataset.isTransitioning = 'true';
+  }
 
   // Determine the target slide index
   let targetPhysicalIndex;
@@ -90,12 +100,19 @@ export function showSlide(block, slideIndex = 0, behavior = 'smooth') {
       // Remove smooth scroll for instant snap
       slidesContainer.classList.remove('smooth-scroll');
       slidesContainer.scrollLeft = allSlides[wrapToIndex].offsetLeft;
-    }, 600);
+      // Clear transitioning flag
+      block.dataset.isTransitioning = 'false';
+    }, 300);
   } else if (behavior === 'smooth') {
     // Remove smooth scroll class after animation
     setTimeout(() => {
       slidesContainer.classList.remove('smooth-scroll');
-    }, 600);
+      // Clear transitioning flag
+      block.dataset.isTransitioning = 'false';
+    }, 300);
+  } else {
+    // For instant transitions (behavior='auto'), clear immediately
+    block.dataset.isTransitioning = 'false';
   }
 }
 
@@ -226,14 +243,14 @@ export default async function decorate(block) {
     block.dataset.activeSlide = 0;
 
     bindEvents(block);
+
     // Initialize to show the first real slide (index 1 with clones)
-    const allSlides = slidesWrapper.querySelectorAll('.carousel-slide');
-    if (allSlides.length > 1) {
-      slidesWrapper.scrollTo({
-        top: 0,
-        left: allSlides[1].offsetLeft,
-        behavior: 'auto',
-      });
-    }
+    // Use requestAnimationFrame to ensure layout is complete before scrolling
+    requestAnimationFrame(() => {
+      const allSlides = slidesWrapper.querySelectorAll('.carousel-slide');
+      if (allSlides.length > 1) {
+        slidesWrapper.scrollLeft = allSlides[1].offsetLeft;
+      }
+    });
   }
 }
