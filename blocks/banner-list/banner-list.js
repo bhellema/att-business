@@ -8,6 +8,11 @@ export default function decorate(block) {
   banners.forEach((banner) => {
     // if there are three children, then remove the first one
     if (banner.children.length === 3) {
+      const style = banner.querySelector(':scope > div:first-of-type').textContent;
+      if (style.toLowerCase().indexOf('light') !== -1) {
+        banner.classList.add('light');
+      }
+
       // remove the first child
       banner.children[0].remove();
     }
