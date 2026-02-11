@@ -5,5 +5,6 @@
   "aemSitePath": "/content/att",
   "aemAssetsFolderPath": "/content/dam/att",
   "aemSiteName": "att",
-  "aemSiteTitle": "ATT Business"
+  "aemSiteTitle": "ATT Business",
+  "baseUrl": "https://www.business.att.com"
 }
