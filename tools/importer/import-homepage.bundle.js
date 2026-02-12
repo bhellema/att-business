@@ -564,20 +564,20 @@ var CustomImportScript = (() => {
       (h2) => h2.textContent.trim() === "Why work with AT&T Business?"
     );
     if (!startEl) return;
-    const endEl = Array.from(element.querySelectorAll(".micro-banner")).find(
-      (p) => p.textContent.includes("Try AT&T Business for 30 days")
+    const endEl = element.querySelector(".micro-banner") || Array.from(element.querySelectorAll(".micro-banner")).find(
+      (el) => el.textContent.includes("Try AT&T Business for 30 days")
     );
     if (!endEl) return;
+    const hrBefore = document.createElement("hr");
+    startEl.parentElement.insertBefore(hrBefore, startEl);
     const sectionMetadata = WebImporter.Blocks.createBlock(document, {
       name: "Section Metadata",
       cells: [
         [createTextDiv(document, "style"), createTextDiv(document, "neutral")]
       ]
     });
-    const hrBefore = document.createElement("hr");
-    startEl.parentElement.insertBefore(hrBefore, startEl);
-    const hrAfter = document.createElement("hr");
     endEl.parentElement.insertBefore(sectionMetadata, endEl);
+    const hrAfter = document.createElement("hr");
     endEl.parentElement.insertBefore(hrAfter, endEl);
   }
 
