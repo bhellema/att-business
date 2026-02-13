@@ -268,6 +268,16 @@ header nav .nav-tools {
   grid-area: tools;
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
+header nav .nav-tools ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  display: flex;
+  gap: 16px;
+  font-size: var(--body-font-size-xs);
+}
+
 header nav .nav-tools .button {
   margin: 0;
   border: none;
