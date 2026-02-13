@@ -1,5 +1,17 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
+function activateItem(block, index) {
+  const images = block.querySelectorAll('.storystack-image');
+  const items = block.querySelectorAll('.storystack-item');
+
+  images.forEach((img, i) => {
+    img.classList.toggle('active', i === index);
+  });
+  items.forEach((item, i) => {
+    item.classList.toggle('active', i === index);
+  });
+}
+
 export default function decorate(block) {
   const rows = [...block.children];
 
@@ -71,16 +83,4 @@ export default function decorate(block) {
   block.textContent = '';
   block.appendChild(imagePanel);
   block.appendChild(itemsPanel);
-}
-
-function activateItem(block, index) {
-  const images = block.querySelectorAll('.storystack-image');
-  const items = block.querySelectorAll('.storystack-item');
-
-  images.forEach((img, i) => {
-    img.classList.toggle('active', i === index);
-  });
-  items.forEach((item, i) => {
-    item.classList.toggle('active', i === index);
-  });
 }
