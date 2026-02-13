@@ -398,3 +398,8 @@ main .section.neutral {
     column-gap: 32px;
   }
 }
+
+/* Hide metadata block — values are extracted into <head> by the framework */
+.metadata-wrapper {
+  display: none;
+}
