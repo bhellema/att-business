@@ -96,6 +96,46 @@ function a11yLinks(main) {
 }
 
 /**
+ * Merges multiple UL lists following the "Looking for more?" heading
+ * into a single UL so CSS column-count distributes items evenly.
+ * @param {Element} main The main element
+ */
+function mergeLinkLists(main) {
+  const heading = main.querySelector('#looking-for-more');
+  if (!heading) return;
+
+  const wrapper = heading.parentElement;
+  if (!wrapper) return;
+
+  const lists = [...wrapper.querySelectorAll('ul')];
+  if (lists.length <= 1) return;
+
+  // Keep only the first 4 lists (the real columns); the 5th+ are duplicates
+  const real = lists.slice(0, 4);
+  const duplicates = lists.slice(4);
+
+  // Merge real lists into the first one
+  const merged = real[0];
+  for (let i = 1; i < real.length; i += 1) {
+    while (real[i].firstChild) {
+      merged.appendChild(real[i].firstChild);
+    }
+    real[i].remove();
+  }
+
+  // Remove duplicate lists
+  duplicates.forEach((ul) => ul.remove());
+
+  // Remove trailing junk paragraphs (tracking pixels, chat text)
+  let next = merged.nextElementSibling;
+  while (next && next.tagName === 'P') {
+    const toRemove = next;
+    next = next.nextElementSibling;
+    toRemove.remove();
+  }
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
@@ -109,6 +149,8 @@ export function decorateMain(main) {
   decorateBlocks(main);
   // add aria-label to links
   a11yLinks(main);
+  // merge "Looking for more?" link lists into single UL
+  mergeLinkLists(main);
 }
 
 /**
