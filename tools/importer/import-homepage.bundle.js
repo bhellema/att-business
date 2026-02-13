@@ -580,6 +580,14 @@ var CustomImportScript = (() => {
     div.textContent = text;
     return div;
   }
+  function createSectionMetadata(document, style) {
+    return WebImporter.Blocks.createBlock(document, {
+      name: "Section Metadata",
+      cells: [
+        [createTextDiv(document, "style"), createTextDiv(document, style)]
+      ]
+    });
+  }
   function transform2(hookName, element, payload) {
     if (hookName !== "afterTransform") return;
     const { document } = payload;
@@ -593,15 +601,33 @@ var CustomImportScript = (() => {
       if (endEl) {
         const hrBefore = document.createElement("hr");
         startEl.parentElement.insertBefore(hrBefore, startEl);
-        const sectionMetadata = WebImporter.Blocks.createBlock(document, {
-          name: "Section Metadata",
-          cells: [
-            [createTextDiv(document, "style"), createTextDiv(document, "neutral")]
-          ]
-        });
-        endEl.parentElement.insertBefore(sectionMetadata, endEl);
+        endEl.parentElement.insertBefore(createSectionMetadata(document, "neutral"), endEl);
         const hrAfter = document.createElement("hr");
         endEl.parentElement.insertBefore(hrAfter, endEl);
+      }
+    }
+    const lookingH2 = Array.from(element.querySelectorAll("h2")).find(
+      (h2) => h2.textContent.trim() === "Looking for more?"
+    );
+    if (lookingH2) {
+      lookingH2.parentElement.insertBefore(document.createElement("hr"), lookingH2);
+      let lastUl = null;
+      let sibling = lookingH2.nextElementSibling;
+      while (sibling) {
+        if (sibling.tagName === "UL") lastUl = sibling;
+        sibling = sibling.nextElementSibling;
+      }
+      const insertAfter = lastUl || lookingH2;
+      insertAfter.parentElement.insertBefore(
+        createSectionMetadata(document, "neutral"),
+        insertAfter.nextElementSibling
+      );
+      const sectionMeta = insertAfter.nextElementSibling;
+      if (sectionMeta && sectionMeta.nextElementSibling) {
+        sectionMeta.parentElement.insertBefore(
+          document.createElement("hr"),
+          sectionMeta.nextElementSibling
+        );
       }
     }
   }

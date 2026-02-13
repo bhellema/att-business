@@ -104,10 +104,11 @@ function mergeLinkLists(main) {
   const heading = main.querySelector('#looking-for-more');
   if (!heading) return;
 
-  const wrapper = heading.parentElement;
-  if (!wrapper) return;
+  // Search the containing section (or fall back to parent wrapper)
+  const container = heading.closest('.section') || heading.parentElement;
+  if (!container) return;
 
-  const lists = [...wrapper.querySelectorAll('ul')];
+  const lists = [...container.querySelectorAll('ul')];
   if (lists.length <= 1) return;
 
   // Keep only the first 4 lists (the real columns); the 5th+ are duplicates
@@ -126,6 +127,12 @@ function mergeLinkLists(main) {
   // Remove duplicate lists
   duplicates.forEach((ul) => ul.remove());
 
+  // Move the merged list next to the heading's wrapper for proper styling
+  const headingWrapper = heading.parentElement;
+  if (headingWrapper && !headingWrapper.contains(merged)) {
+    headingWrapper.appendChild(merged);
+  }
+
   // Remove trailing junk paragraphs (tracking pixels, chat text)
   let next = merged.nextElementSibling;
   while (next && next.tagName === 'P') {
@@ -133,6 +140,11 @@ function mergeLinkLists(main) {
     next = next.nextElementSibling;
     toRemove.remove();
   }
+
+  // Remove empty wrappers left behind
+  container.querySelectorAll('.default-content-wrapper').forEach((w) => {
+    if (!w.children.length) w.remove();
+  });
 }
 
 /**
