@@ -1,7 +1,0 @@
-{
-  "mappings": [
-    "/content/att/:/",
-    "/content/att/metadata:/metadata.json",
-    "/content/att/configuration:/.helix/config.json"
-  ]
-}
