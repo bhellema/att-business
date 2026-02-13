@@ -493,8 +493,31 @@ var CustomImportScript = (() => {
       textFrag.appendChild(textContent);
       cells.push([bgImageFrag, iconFrag, textFrag]);
     });
+    const masterHeader = element.querySelector(".ss-masterHeader");
+    const headerElements = [];
+    if (masterHeader) {
+      const heading = masterHeader.querySelector(".heading-xxl, .heading-xl");
+      if (heading && heading.textContent.trim()) {
+        const h2 = document.createElement("h2");
+        h2.textContent = heading.textContent.trim();
+        headerElements.push(h2);
+      }
+      const desc = masterHeader.querySelector(".type-base");
+      if (desc && desc.textContent.trim()) {
+        const p = document.createElement("p");
+        p.textContent = desc.textContent.trim();
+        headerElements.push(p);
+      }
+    }
     const block = WebImporter.Blocks.createBlock(document, { name: "storystack", cells });
-    element.replaceWith(block);
+    if (headerElements.length > 0) {
+      const wrapper = document.createDocumentFragment();
+      headerElements.forEach((el) => wrapper.appendChild(el));
+      wrapper.appendChild(block);
+      element.replaceWith(wrapper);
+    } else {
+      element.replaceWith(block);
+    }
   }
 
   // tools/importer/transformers/att-business-cleanup.js
@@ -563,22 +586,127 @@ var CustomImportScript = (() => {
     const startEl = Array.from(element.querySelectorAll("h2")).find(
       (h2) => h2.textContent.trim() === "Why work with AT&T Business?"
     );
-    if (!startEl) return;
-    const endEl = Array.from(element.querySelectorAll(".micro-banner")).find(
-      (p) => p.textContent.includes("Try AT&T Business for 30 days")
+    if (startEl) {
+      const endEl = element.querySelector(".micro-banner") || Array.from(element.querySelectorAll(".micro-banner")).find(
+        (el) => el.textContent.includes("Try AT&T Business for 30 days")
+      );
+      if (endEl) {
+        const hrBefore = document.createElement("hr");
+        startEl.parentElement.insertBefore(hrBefore, startEl);
+        const sectionMetadata = WebImporter.Blocks.createBlock(document, {
+          name: "Section Metadata",
+          cells: [
+            [createTextDiv(document, "style"), createTextDiv(document, "neutral")]
+          ]
+        });
+        endEl.parentElement.insertBefore(sectionMetadata, endEl);
+        const hrAfter = document.createElement("hr");
+        endEl.parentElement.insertBefore(hrAfter, endEl);
+      }
+    }
+  }
+
+  // tools/importer/transformers/columns-switch.js
+  function wrapSwitchColumns(element, document) {
+    const switchImg = element.querySelector('img[src*="offer-SW-HP"]') || element.querySelector('img[src*="story-tile"]');
+    const switchH2 = Array.from(element.querySelectorAll("h2")).find(
+      (h2) => h2.textContent.trim() === "Make the switch to AT&T Business"
     );
-    if (!endEl) return;
-    const sectionMetadata = WebImporter.Blocks.createBlock(document, {
-      name: "Section Metadata",
-      cells: [
-        [createTextDiv(document, "style"), createTextDiv(document, "neutral")]
-      ]
-    });
-    const hrBefore = document.createElement("hr");
-    startEl.parentElement.insertBefore(hrBefore, startEl);
-    const hrAfter = document.createElement("hr");
-    endEl.parentElement.insertBefore(sectionMetadata, endEl);
-    endEl.parentElement.insertBefore(hrAfter, endEl);
+    if (!switchH2) return;
+    let container = switchH2.parentElement;
+    while (container && container !== element) {
+      if (switchImg && container.contains(switchImg) && container.contains(switchH2)) {
+        break;
+      }
+      container = container.parentElement;
+    }
+    const td1 = document.createElement("td");
+    if (switchImg) {
+      const p = document.createElement("p");
+      const img = document.createElement("img");
+      img.setAttribute("src", switchImg.getAttribute("src"));
+      img.setAttribute("alt", switchImg.getAttribute("alt") || "");
+      p.appendChild(img);
+      td1.appendChild(p);
+    }
+    const td2 = document.createElement("td");
+    const eyebrow = switchH2.previousElementSibling;
+    if (eyebrow) {
+      const eyebrowP = document.createElement("p");
+      eyebrowP.textContent = eyebrow.textContent.trim();
+      td2.appendChild(eyebrowP);
+    }
+    const h2El = document.createElement("h2");
+    h2El.textContent = switchH2.textContent.trim();
+    td2.appendChild(h2El);
+    let sibling = switchH2.nextElementSibling;
+    while (sibling) {
+      const text = sibling.textContent.trim();
+      if (text) {
+        const listItems = sibling.querySelectorAll("li");
+        if (listItems.length > 0) {
+          const introText = sibling.querySelector("p, .wysiwyg-editor");
+          if (introText && introText.textContent.trim()) {
+            const pEl = document.createElement("p");
+            pEl.textContent = introText.textContent.trim();
+            td2.appendChild(pEl);
+          }
+          const ul = document.createElement("ul");
+          listItems.forEach((li) => {
+            const liEl = document.createElement("li");
+            liEl.textContent = li.textContent.trim();
+            ul.appendChild(liEl);
+          });
+          td2.appendChild(ul);
+        } else {
+          const links = sibling.querySelectorAll("a[href]");
+          if (links.length > 0) {
+            links.forEach((link) => {
+              if (link.textContent.trim() && !link.getAttribute("href").startsWith("javascript:")) {
+                const pEl = document.createElement("p");
+                const aEl = document.createElement("a");
+                aEl.setAttribute("href", link.getAttribute("href"));
+                aEl.textContent = link.textContent.trim();
+                pEl.appendChild(aEl);
+                td2.appendChild(pEl);
+              }
+            });
+          } else if (!sibling.querySelector("img")) {
+            const pEl = document.createElement("p");
+            pEl.textContent = text;
+            td2.appendChild(pEl);
+          }
+        }
+      }
+      sibling = sibling.nextElementSibling;
+    }
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    const headerCell = document.createElement("th");
+    headerCell.setAttribute("colspan", "2");
+    headerCell.textContent = "Columns";
+    headerRow.appendChild(headerCell);
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+    const tbody = document.createElement("tbody");
+    const contentRow = document.createElement("tr");
+    contentRow.appendChild(td1);
+    contentRow.appendChild(td2);
+    tbody.appendChild(contentRow);
+    table.appendChild(tbody);
+    let storyContainer = switchH2.closest(".story-tile-row") || switchH2.closest('[class*="story-tile"]') || switchH2.closest('[class*="offer"]');
+    if (!storyContainer && container && container !== element) {
+      storyContainer = container;
+    }
+    if (storyContainer) {
+      storyContainer.replaceWith(table);
+    }
+  }
+  function transform3(hookName, element, payload) {
+    if (hookName !== "afterTransform") return;
+    const { document } = payload;
+    wrapSwitchColumns(element, document);
   }
 
   // tools/importer/import-homepage.js
@@ -592,7 +720,8 @@ var CustomImportScript = (() => {
   };
   var transformers = [
     transform,
-    transform2
+    transform2,
+    transform3
   ];
   var PAGE_TEMPLATE = {
     name: "homepage",

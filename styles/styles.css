@@ -355,3 +355,51 @@ main .section.neutral {
   margin: 0;
   padding: 10px 0;
 }
+
+/* ---- "Looking for more?" link grid ---- */
+.default-content-wrapper:has(#looking-for-more) {
+  padding-top: 16px;
+  padding-bottom: 40px;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+}
+
+.default-content-wrapper:has(#looking-for-more) #looking-for-more {
+  text-align: left;
+}
+
+.default-content-wrapper:has(#looking-for-more) ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  column-count: 2;
+  column-gap: 24px;
+}
+
+.default-content-wrapper:has(#looking-for-more) ul li {
+  padding: 8px 0;
+  break-inside: avoid;
+}
+
+.default-content-wrapper:has(#looking-for-more) ul li a {
+  color: var(--att-text-secondary);
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.default-content-wrapper:has(#looking-for-more) ul li a:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+@media (width >= 900px) {
+  .default-content-wrapper:has(#looking-for-more) ul {
+    column-count: 4;
+    column-gap: 32px;
+  }
+}
+
+/* Hide metadata block — values are extracted into <head> by the framework */
+.metadata-wrapper {
+  display: none;
+}

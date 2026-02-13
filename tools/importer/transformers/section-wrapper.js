@@ -3,12 +3,11 @@
 
 /**
  * Section Transformer
- * Creates EDS sections with section metadata for styled areas
+ * Creates EDS section boundary around the "Why work with AT&T Business?" area
+ * and applies section-metadata with style: neutral.
  *
  * Sections in EDS are created using horizontal rules (<hr>) as dividers.
- * Section Metadata blocks are added to apply styles (e.g., "grey-background").
- *
- * Based on: https://github.com/blefebvre/ec-xwalk-jan-21/blob/477e54261cc7c28edbf4edb8d6f21cfdcd7f62aa/tools/importer/transformers/sections.js
+ * Section Metadata blocks are added to apply styles (e.g., "neutral").
  */
 
 /**
@@ -25,34 +24,29 @@ export default function transform(hookName, element, payload) {
 
   const { document } = payload;
 
-  // Find the specific H2 that starts the dark section
+  // --- Section 5: Neutral "Why work with AT&T Business?" ---
   const startEl = Array.from(element.querySelectorAll('h2')).find(
-    (h2) => h2.textContent.trim() === 'Why work with AT&T Business?'
+    (h2) => h2.textContent.trim() === 'Why work with AT&T Business?',
   );
+  if (startEl) {
+    const endEl = element.querySelector('.micro-banner')
+      || Array.from(element.querySelectorAll('.micro-banner')).find(
+        (el) => el.textContent.includes('Try AT&T Business for 30 days'),
+      );
+    if (endEl) {
+      const hrBefore = document.createElement('hr');
+      startEl.parentElement.insertBefore(hrBefore, startEl);
 
-  if (!startEl) return;
+      const sectionMetadata = WebImporter.Blocks.createBlock(document, {
+        name: 'Section Metadata',
+        cells: [
+          [createTextDiv(document, 'style'), createTextDiv(document, 'neutral')],
+        ],
+      });
+      endEl.parentElement.insertBefore(sectionMetadata, endEl);
 
-  const endEl = Array.from(element.querySelectorAll('.micro-banner')).find(
-    (p) => p.textContent.includes('Try AT&T Business for 30 days')
-  );
-
-
-  if (!endEl) return;
-
-  // Create Section Metadata block for dark style
-  const sectionMetadata = WebImporter.Blocks.createBlock(document, {
-    name: 'Section Metadata',
-    cells: [
-      [createTextDiv(document, 'style'), createTextDiv(document, 'neutral')]
-    ]
-  });
-
-  // Insert HR before the H2 (creates section break before dark section)
-  const hrBefore = document.createElement('hr');
-  startEl.parentElement.insertBefore(hrBefore, startEl);
-
-  // Insert Section Metadata and HR before the "Latest news" H3
-  const hrAfter = document.createElement('hr');
-  endEl.parentElement.insertBefore(sectionMetadata, endEl);
-  endEl.parentElement.insertBefore(hrAfter, endEl);
+      const hrAfter = document.createElement('hr');
+      endEl.parentElement.insertBefore(hrAfter, endEl);
+    }
+  }
 }

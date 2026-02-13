@@ -108,9 +108,35 @@ export default function parse(element, { document }) {
     cells.push([bgImageFrag, iconFrag, textFrag]);
   });
 
+  // Extract section heading/description above the storystack carousel
+  // (e.g. "Solutions for every kind of business" + description text)
+  const masterHeader = element.querySelector('.ss-masterHeader');
+  const headerElements = [];
+  if (masterHeader) {
+    const heading = masterHeader.querySelector('.heading-xxl, .heading-xl');
+    if (heading && heading.textContent.trim()) {
+      const h2 = document.createElement('h2');
+      h2.textContent = heading.textContent.trim();
+      headerElements.push(h2);
+    }
+    const desc = masterHeader.querySelector('.type-base');
+    if (desc && desc.textContent.trim()) {
+      const p = document.createElement('p');
+      p.textContent = desc.textContent.trim();
+      headerElements.push(p);
+    }
+  }
+
   // Create storystack block using createBlock
   const block = WebImporter.Blocks.createBlock(document, { name: 'storystack', cells });
 
-  // Replace the parent element with the storystack block
-  element.replaceWith(block);
+  // Replace the element: insert header elements as default content before the block
+  if (headerElements.length > 0) {
+    const wrapper = document.createDocumentFragment();
+    headerElements.forEach((el) => wrapper.appendChild(el));
+    wrapper.appendChild(block);
+    element.replaceWith(wrapper);
+  } else {
+    element.replaceWith(block);
+  }
 }

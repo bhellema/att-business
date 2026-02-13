@@ -1,112 +1,86 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
-import { createOptimizedPicture } from '../../scripts/aem.js';
 
-function showStory(block, index) {
-  const slides = block.querySelectorAll('.storystack-slide');
-  const buttons = block.querySelectorAll('.storystack-nav-button');
+function activateItem(block, index) {
+  const images = block.querySelectorAll('.storystack-image');
+  const items = block.querySelectorAll('.storystack-item');
 
-  slides.forEach((slide, i) => {
-    if (i === index) {
-      slide.classList.add('active');
-    } else {
-      slide.classList.remove('active');
-    }
+  images.forEach((img, i) => {
+    img.classList.toggle('active', i === index);
   });
-
-  buttons.forEach((button, i) => {
-    if (i === index) {
-      button.classList.add('active');
-    } else {
-      button.classList.remove('active');
-    }
+  items.forEach((item, i) => {
+    item.classList.toggle('active', i === index);
   });
 }
 
 export default function decorate(block) {
-  // Convert to ul/li structure for stories
-  const ul = document.createElement('ul');
-  ul.classList.add('storystack-slides');
+  const rows = [...block.children];
 
-  [...block.children].forEach((row) => {
-    const li = document.createElement('li');
-    li.classList.add('storystack-slide');
-    moveInstrumentation(row, li);
+  // Build image panel (left side on desktop)
+  const imagePanel = document.createElement('div');
+  imagePanel.classList.add('storystack-image-panel');
 
-    // Each row has 3 columns: background image, icon, text
+  // Build items panel (right side on desktop)
+  const itemsPanel = document.createElement('div');
+  itemsPanel.classList.add('storystack-items');
+
+  rows.forEach((row, index) => {
     const columns = [...row.children];
+    if (columns.length < 3) return;
 
-    if (columns.length >= 3) {
-      const [bgImageCol, iconCol, textCol] = columns;
+    const [bgImageCol, iconCol, textCol] = columns;
 
-      // Create image wrapper for background image
-      const imageWrapper = document.createElement('div');
-      imageWrapper.classList.add('storystack-image-wrapper');
+    // Create image slide for the image panel
+    const imageSlide = document.createElement('div');
+    imageSlide.classList.add('storystack-image');
+    if (index === 0) imageSlide.classList.add('active');
 
-      // Process background image
-      const bgPicture = bgImageCol.querySelector('picture');
-      if (bgPicture) {
-        const bgImg = bgPicture.querySelector('img');
-        if (bgImg) {
-          const optimizedBg = createOptimizedPicture(bgImg.src, bgImg.alt, false, [{ width: '750' }]);
-          moveInstrumentation(bgImg, optimizedBg.querySelector('img'));
-          imageWrapper.appendChild(optimizedBg);
-        }
-      }
-
-      // Process icon image (overlay on background)
-      const iconPicture = iconCol.querySelector('picture');
-      if (iconPicture) {
-        const iconImg = iconPicture.querySelector('img');
-        if (iconImg) {
-          const iconContainer = document.createElement('div');
-          iconContainer.classList.add('storystack-icon');
-          const optimizedIcon = createOptimizedPicture(iconImg.src, iconImg.alt, false, [{ width: '200' }]);
-          moveInstrumentation(iconImg, optimizedIcon.querySelector('img'));
-          iconContainer.appendChild(optimizedIcon);
-          imageWrapper.appendChild(iconContainer);
-        }
-      }
-
-      li.appendChild(imageWrapper);
-
-      // Process text content
-      const textWrapper = document.createElement('div');
-      textWrapper.classList.add('storystack-content');
-
-      while (textCol.firstElementChild) {
-        textWrapper.appendChild(textCol.firstElementChild);
-      }
-
-      li.appendChild(textWrapper);
+    const bgPicture = bgImageCol.querySelector('picture');
+    if (bgPicture) {
+      imageSlide.appendChild(bgPicture);
+    } else {
+      const bgImg = bgImageCol.querySelector('img');
+      if (bgImg) imageSlide.appendChild(bgImg);
     }
+    imagePanel.appendChild(imageSlide);
 
-    ul.appendChild(li);
+    // Create item row for the items panel
+    const item = document.createElement('div');
+    item.classList.add('storystack-item');
+    if (index === 0) item.classList.add('active');
+    moveInstrumentation(row, item);
+
+    // Icon
+    const iconWrapper = document.createElement('div');
+    iconWrapper.classList.add('storystack-item-icon');
+    const iconPicture = iconCol.querySelector('picture');
+    if (iconPicture) {
+      iconWrapper.appendChild(iconPicture);
+    } else {
+      const iconImg = iconCol.querySelector('img');
+      if (iconImg) iconWrapper.appendChild(iconImg);
+    }
+    item.appendChild(iconWrapper);
+
+    // Text content
+    const textWrapper = document.createElement('div');
+    textWrapper.classList.add('storystack-item-text');
+    while (textCol.firstElementChild) {
+      textWrapper.appendChild(textCol.firstElementChild);
+    }
+    item.appendChild(textWrapper);
+
+    // Hover and click handlers
+    item.addEventListener('mouseenter', () => {
+      activateItem(block, index);
+    });
+    item.addEventListener('click', () => {
+      activateItem(block, index);
+    });
+
+    itemsPanel.appendChild(item);
   });
 
   block.textContent = '';
-  block.appendChild(ul);
-
-  // Add navigation if more than one story
-  if (ul.children.length > 1) {
-    const nav = document.createElement('div');
-    nav.classList.add('storystack-nav');
-
-    [...ul.children].forEach((_, index) => {
-      const button = document.createElement('button');
-      button.classList.add('storystack-nav-button');
-      button.setAttribute('aria-label', `Go to story ${index + 1}`);
-      if (index === 0) button.classList.add('active');
-      button.addEventListener('click', () => {
-        showStory(block, index);
-      });
-      nav.appendChild(button);
-    });
-
-    block.appendChild(nav);
-  }
-
-  // Initialize first story as active
-  if (ul.children.length > 0) {
-    ul.children[0].classList.add('active');
-  }
+  block.appendChild(imagePanel);
+  block.appendChild(itemsPanel);
 }
