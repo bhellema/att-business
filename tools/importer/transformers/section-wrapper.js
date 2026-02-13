@@ -24,32 +24,29 @@ export default function transform(hookName, element, payload) {
 
   const { document } = payload;
 
-  // Find the H2 that starts the neutral section
+  // --- Section 5: Neutral "Why work with AT&T Business?" ---
   const startEl = Array.from(element.querySelectorAll('h2')).find(
     (h2) => h2.textContent.trim() === 'Why work with AT&T Business?',
   );
-  if (!startEl) return;
+  if (startEl) {
+    const endEl = element.querySelector('.micro-banner')
+      || Array.from(element.querySelectorAll('.micro-banner')).find(
+        (el) => el.textContent.includes('Try AT&T Business for 30 days'),
+      );
+    if (endEl) {
+      const hrBefore = document.createElement('hr');
+      startEl.parentElement.insertBefore(hrBefore, startEl);
 
-  // Find the element that marks the start of the next section (carousel area)
-  const endEl = element.querySelector('.micro-banner')
-    || Array.from(element.querySelectorAll('.micro-banner')).find(
-      (el) => el.textContent.includes('Try AT&T Business for 30 days'),
-    );
-  if (!endEl) return;
+      const sectionMetadata = WebImporter.Blocks.createBlock(document, {
+        name: 'Section Metadata',
+        cells: [
+          [createTextDiv(document, 'style'), createTextDiv(document, 'neutral')],
+        ],
+      });
+      endEl.parentElement.insertBefore(sectionMetadata, endEl);
 
-  // Insert <hr> before the H2 to start the neutral section
-  const hrBefore = document.createElement('hr');
-  startEl.parentElement.insertBefore(hrBefore, startEl);
-
-  // Insert Section Metadata (neutral) and <hr> before the next section
-  const sectionMetadata = WebImporter.Blocks.createBlock(document, {
-    name: 'Section Metadata',
-    cells: [
-      [createTextDiv(document, 'style'), createTextDiv(document, 'neutral')],
-    ],
-  });
-  endEl.parentElement.insertBefore(sectionMetadata, endEl);
-
-  const hrAfter = document.createElement('hr');
-  endEl.parentElement.insertBefore(hrAfter, endEl);
+      const hrAfter = document.createElement('hr');
+      endEl.parentElement.insertBefore(hrAfter, endEl);
+    }
+  }
 }

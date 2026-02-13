@@ -18,6 +18,7 @@ import storystackParser from './parsers/storystack.js';
 // TRANSFORMER IMPORTS - Import all transformers
 import attBusinessCleanupTransformer from './transformers/att-business-cleanup.js';
 import sectionWrapperTransformer from './transformers/section-wrapper.js';
+import columnsSwitchTransformer from './transformers/columns-switch.js';
 
 // PARSER REGISTRY - Map parser names to functions
 const parsers = {
@@ -33,6 +34,7 @@ const parsers = {
 const transformers = [
   attBusinessCleanupTransformer,
   sectionWrapperTransformer,
+  columnsSwitchTransformer,
 ];
 
 // PAGE TEMPLATE CONFIGURATION - Embedded from page-templates.json
